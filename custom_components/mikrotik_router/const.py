@@ -1,6 +1,7 @@
 """Constants used by the Mikrotik Router component and platforms."""
 
 from homeassistant.const import Platform
+from librouteros.login import plain, token
 
 PLATFORMS = [
     Platform.SENSOR,
@@ -16,7 +17,7 @@ DEFAULT_NAME = "Mikrotik Router"
 ATTRIBUTION = "Data provided by Mikrotik"
 
 DEFAULT_ENCODING = "ISO-8859-1"
-DEFAULT_LOGIN_METHOD = "plain"
+DEFAULT_LOGIN_METHOD = plain
 
 DEFAULT_HOST = "10.0.0.1"
 DEFAULT_USERNAME = "admin"
