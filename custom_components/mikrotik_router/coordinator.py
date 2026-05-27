@@ -511,6 +511,10 @@ class MikrotikCoordinator(DataUpdateCoordinator[None]):
                 self.support_capsman = False
                 self._wifimodule = "wifiwave2"
 
+            elif "wireless" in packages and packages["wireless"]["enabled"]:
+                self.support_capsman = False
+                self._wifimodule = "wireless"
+    
             elif "wifi" in packages and packages["wifi"]["enabled"]:
                 self.support_capsman = False
                 self._wifimodule = "wifi"
@@ -527,7 +531,7 @@ class MikrotikCoordinator(DataUpdateCoordinator[None]):
                 self.major_fw_version == 7 and self.minor_fw_version >= 13
             ) or self.major_fw_version > 7:
                 self.support_capsman = False
-                self._wifimodule = "wifi"
+                self._wifimodule = "wireless"
 
             else:
                 self.support_capsman = True
@@ -2209,32 +2213,8 @@ class MikrotikCoordinator(DataUpdateCoordinator[None]):
         # Process hosts
         self.ds["resource"]["clients_wired"] = 0
         self.ds["resource"]["clients_wireless"] = 0
-
-        _LOGGER.warning(
-            "MikroTik client debug: arp=%s dhcp=%s capsman_hosts=%s wireless_hosts=%s host=%s support_wireless=%s support_capsman=%s wifi_module=%s",
-            len(self.ds["arp"]),
-            len(self.ds["dhcp"]),
-            len(self.ds["capsman_hosts"]),
-            len(self.ds["wireless_hosts"]),
-            len(self.ds["host"]),
-            self.support_wireless,
-            self.support_capsman,
-            self._wifimodule,
-        )
-
         for uid, vals in self.ds["host"].items():
-
-            _LOGGER.warning(
-                "MikroTik host debug: uid=%s source=%s available=%s address=%s interface=%s name=%s",
-                uid,
-                vals.get("source"),
-                vals.get("available"),
-                vals.get("address"),
-                vals.get("interface"),
-                vals.get("host-name"),
-            )
-
-            if self.ds["host"][uid]["available"]:
+            if vals.get("available") or vals.get("source") in ["dhcp", "arp"]:
                 if vals["source"] in ["capsman", "wireless", "wifi", "wifiwave2"]:
                     self.ds["resource"]["clients_wireless"] += 1
                 else:
