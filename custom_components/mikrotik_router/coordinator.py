@@ -173,9 +173,9 @@ class MikrotikTrackerCoordinator(DataUpdateCoordinator[None]):
                     self.coordinator.ds["host"][uid]["source"] not in ["capsman", "wireless"]
                     and self.coordinator.ds["host"][uid]["address"] not in ["unknown", ""]
                     and self.coordinator.ds["host"][uid]["interface"] not in ["unknown", ""]
-                    ):
-                self.coordinator.ds["host"][uid]["available"] = True
-                self.coordinator.ds["host"][uid]["last-seen"] = utcnow()
+                ):
+                    self.coordinator.ds["host"][uid]["available"] = True
+                    self.coordinator.ds["host"][uid]["last-seen"] = utcnow()
     
             # Check host availability
             if (
