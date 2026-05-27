@@ -2209,6 +2209,18 @@ class MikrotikCoordinator(DataUpdateCoordinator[None]):
         # Process hosts
         self.ds["resource"]["clients_wired"] = 0
         self.ds["resource"]["clients_wireless"] = 0
+        _LOGGER.warning(
+            "MikroTik client debug: arp=%s dhcp=%s capsman_hosts=%s wireless_hosts=%s host=%s support_wireless=%s support_capsman=%s wifi_module=%s",
+            len(self.ds["arp"]),
+            len(self.ds["dhcp"]),
+            len(self.ds["capsman_hosts"]),
+            len(self.ds["wireless_hosts"]),
+            len(self.ds["host"]),
+            self.support_wireless,
+            self.support_capsman,
+            self._wifimodule,
+        )
+        
         for uid, vals in self.ds["host"].items():
             # Captive portal data
             if self.option_sensor_client_captive:
