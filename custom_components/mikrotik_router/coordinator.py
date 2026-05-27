@@ -2171,6 +2171,9 @@ class MikrotikCoordinator(DataUpdateCoordinator[None]):
             elif self.ds["host"][uid]["source"] != "arp":
                 continue
 
+            self.ds["host"][uid]["available"] = True
+            self.ds["host"][uid]["last-seen"] = utcnow()
+    
             for key in ["address", "mac-address", "interface"]:
                 self.ds["host"][uid][key] = vals[key]
 
@@ -2314,7 +2317,7 @@ class MikrotikCoordinator(DataUpdateCoordinator[None]):
 
             # Count hosts
             if self.ds["host"][uid]["available"]:
-                if vals["source"] in ["capsman", "wireless"]:
+                if vals["source"] in ["capsman", "wireless", "wifi", "wifiwave2"]:
                     self.ds["resource"]["clients_wireless"] += 1
                 else:
                     self.ds["resource"]["clients_wired"] += 1
