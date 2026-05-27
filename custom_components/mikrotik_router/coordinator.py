@@ -168,7 +168,15 @@ class MikrotikTrackerCoordinator(DataUpdateCoordinator[None]):
                 ):
                     if key not in self.coordinator.ds["host"][uid]:
                         self.coordinator.ds["host"][uid][key] = default
-
+                # Treat ARP/DHCP hosts as available so wired client count can update
+                if (
+                    self.coordinator.ds["host"][uid]["source"] not in ["capsman", "wireless"]
+                    and self.coordinator.ds["host"][uid]["address"] not in ["unknown", ""]
+                    and self.coordinator.ds["host"][uid]["interface"] not in ["unknown", ""]
+                    ):
+                self.coordinator.ds["host"][uid]["available"] = True
+                self.coordinator.ds["host"][uid]["last-seen"] = utcnow()
+    
             # Check host availability
             if (
                 self.coordinator.ds["host"][uid]["source"]
